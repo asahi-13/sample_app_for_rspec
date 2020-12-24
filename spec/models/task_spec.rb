@@ -11,5 +11,10 @@ RSpec.describe Task, type: :model do
       task = build(:task, title:"")
       expect(task).to be_invalid
     end
+
+    it 'ステータスがない場合無効となること' do
+      task = build(:task, status:nil)
+      expect(task).to be_invalid
+    end
   end
 end
