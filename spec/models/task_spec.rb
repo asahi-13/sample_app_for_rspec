@@ -22,5 +22,11 @@ RSpec.describe Task, type: :model do
       task_duplicate = build(:task)
       expect(task_duplicate).to be_invalid
     end
+
+    it 'タイトルが重複しない場合有効となること' do
+      task = create(:task)
+      other_task = build(:task, title:"test2")
+      expect(other_task).to be_valid
+    end
   end
 end
