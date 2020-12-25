@@ -24,6 +24,7 @@ RSpec.describe Task, type: :model do
       task = create(:task)
       task_with_duplicated_title = build(:task, title: task.title)
       expect(task_with_duplicated_title).to be_invalid
+      expect(task_with_duplicated_title.errors[:title]).to eq ["has already been taken"]
     end
 
     it 'タイトルが重複しない場合有効となること' do
