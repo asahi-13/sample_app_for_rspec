@@ -31,6 +31,7 @@ RSpec.describe Task, type: :model do
       task = create(:task)
       task_with_another_title = build(:task, title: 'another_title')
       expect(task_with_another_title).to be_valid
+      expect(task_with_another_title.errors).to be_empty
     end
   end
 end
