@@ -15,8 +15,8 @@ RSpec.describe Task, type: :model do
     end
 
     it 'ステータスがない場合無効となること' do
-      task = build(:task, status:nil)
-      expect(task).to be_invalid
+      task_without_status = build(:task, status: nil)
+      expect(task_without_status).to be_invalid
     end
 
     it '重複するタイトルの場合無効となること' do
