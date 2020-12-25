@@ -5,6 +5,7 @@ RSpec.describe Task, type: :model do
     it '全ての属性が有効であること' do
       task = build(:task)
       expect(task).to be_valid
+      expect(task.errors).to be_empty
     end
 
     it 'タイトルがない場合無効となること' do
