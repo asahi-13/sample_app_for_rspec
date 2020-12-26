@@ -18,6 +18,10 @@ group :development, :test do
   gem 'rspec-rails', '~> 4.0.1'
 end
 
+group :test do
+  gem 'webdrivers'
+end
+
 group :development do
   gem 'web-console', '>= 3.3.0'
   gem 'listen', '>= 3.0.5', '< 3.2'
