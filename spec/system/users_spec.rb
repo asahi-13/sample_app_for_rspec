@@ -25,5 +25,19 @@ RSpec.describe "Users", type: :system do
         }.to change { User.count }.by(0)
       end
     end
+
+    context '登録済みのメールアドレスを使用' do
+      it 'ユーザーの新規作成が失敗する' do
+        user = create(:user)
+        visit '/users/new'
+        expect {
+          fill_in 'Email', with: user.email
+          fill_in 'Password', with: '12345678'
+          fill_in 'Password confirmation', with: '12345678'
+          click_button 'SignUp'
+        }.to change { User.count }.by(0)
+      end
+    end
+
   end
 end
