@@ -13,5 +13,15 @@ RSpec.describe "UserSessions", type: :system do
         expect(page).to have_content('Login successful')
       end
     end
+
+    context 'フォームが未入力' do
+      it 'ログイン処理が失敗する' do
+        user = create(:user)
+        visit '/login'
+        click_button 'Login'
+        expect(current_path).to eq '/login'
+        expect(page).to have_content('Login failed')
+      end
+    end
   end
 end
