@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "Users", type: :system do
-  describe 'ログイン前', focus: true do
+  describe 'ログイン前' do
     context 'フォームの入力値が正常' do
       it 'ユーザーの新規作成が成功する' do
         visit '/users/new'
@@ -38,6 +38,15 @@ RSpec.describe "Users", type: :system do
         }.to change { User.count }.by(0)
       end
     end
+  end
 
+  describe 'マイページ' do
+    context 'ログインしていない状態' do
+      it 'マイページへのアクセスが失敗する' do
+        user = create(:user)
+        visit user_path(:user)
+        expect(current_path).to eq(login_path)
+      end
+    end
   end
 end
