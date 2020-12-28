@@ -81,5 +81,21 @@ RSpec.describe "Users", type: :system do
         expect(page).to have_content("1 error prohibited this user from being saved")
       end
     end
+
+    context '登録済みのメールアドレスを使用' do
+      it 'ユーザーの編集が失敗する' do
+        user = create(:user)
+        user2 = create(:user)
+        login_user(user)
+        visit edit_user_path(user)
+        fill_in 'Email', with: user2.email
+        fill_in 'Password', with: '12345678'
+        fill_in 'Password confirmation', with: '12345678'
+        click_button 'Update'
+        expect(current_path).to eq(user_path(user))
+        expect(page).to have_content("Email has already been taken")
+        expect(page).to have_content("1 error prohibited this user from being saved")
+      end
+    end
   end
 end
