@@ -44,8 +44,26 @@ RSpec.describe "Users", type: :system do
     context 'ログインしていない状態' do
       it 'マイページへのアクセスが失敗する' do
         user = create(:user)
-        visit user_path(:user)
+        visit user_path(user)
         expect(current_path).to eq(login_path)
+      end
+    end
+  end
+
+  describe 'ログイン後' do
+    describe 'ユーザー編集' do
+      context 'フォームの入力値が正常' do
+        it 'ユーザーの編集が成功する' do
+          user = create(:user)
+          login_user(user)
+          visit edit_user_path(user)
+          fill_in 'Email', with: 'editexample@example.com'
+          fill_in 'Password', with: '12345678'
+          fill_in 'Password confirmation', with: '12345678'
+          click_button 'Update'
+          expect(current_path).to eq(user_path(user))
+          expect(page).to have_content('User was successfully updated.')
+        end
       end
     end
   end
