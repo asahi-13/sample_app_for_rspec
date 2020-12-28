@@ -97,5 +97,16 @@ RSpec.describe "Users", type: :system do
         expect(page).to have_content("1 error prohibited this user from being saved")
       end
     end
+
+    context '他のユーザーの編集ページにアクセス' do
+      it '編集ページへのアクセスが失敗する' do
+        user = create(:user)
+        user2 = create(:user)
+        login_user(user)
+        visit edit_user_path(user2)
+        expect(current_path).to eq(user_path(user))
+        expect(page).to have_content("Forbidden access.")
+      end
+    end
   end
 end
