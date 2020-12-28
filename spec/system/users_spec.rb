@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "Users", type: :system do
+  let!(:user) {create(:user)}
   describe 'ログイン前' do
     context 'フォームの入力値が正常' do
       it 'ユーザーの新規作成が成功する' do
@@ -28,7 +29,6 @@ RSpec.describe "Users", type: :system do
 
     context '登録済みのメールアドレスを使用' do
       it 'ユーザーの新規作成が失敗する' do
-        user = create(:user)
         visit '/users/new'
         expect {
           fill_in 'Email', with: user.email
@@ -43,7 +43,6 @@ RSpec.describe "Users", type: :system do
   describe 'マイページ' do
     context 'ログインしていない状態' do
       it 'マイページへのアクセスが失敗する' do
-        user = create(:user)
         visit user_path(user)
         expect(current_path).to eq(login_path)
       end
@@ -51,11 +50,13 @@ RSpec.describe "Users", type: :system do
   end
 
   describe 'ログイン後' do
+    before do
+      login(user)
+    end
+
     describe 'ユーザー編集' do
       context 'フォームの入力値が正常' do
         it 'ユーザーの編集が成功する' do
-          user = create(:user)
-          login_user(user)
           visit edit_user_path(user)
           fill_in 'Email', with: 'editexample@example.com'
           fill_in 'Password', with: '12345678'
@@ -68,8 +69,6 @@ RSpec.describe "Users", type: :system do
 
       context 'メールアドレスが未入力' do
         it 'ユーザーの編集が失敗する' do
-          user = create(:user)
-          login_user(user)
           visit edit_user_path(user)
           fill_in 'Email', with: ''
           fill_in 'Password', with: '12345678'
@@ -83,9 +82,7 @@ RSpec.describe "Users", type: :system do
 
       context '登録済みのメールアドレスを使用' do
         it 'ユーザーの編集が失敗する' do
-          user = create(:user)
           user2 = create(:user)
-          login_user(user)
           visit edit_user_path(user)
           fill_in 'Email', with: user2.email
           fill_in 'Password', with: '12345678'
@@ -99,9 +96,7 @@ RSpec.describe "Users", type: :system do
 
       context '他のユーザーの編集ページにアクセス' do
         it '編集ページへのアクセスが失敗する' do
-          user = create(:user)
           user2 = create(:user)
-          login_user(user)
           visit edit_user_path(user2)
           expect(current_path).to eq(user_path(user))
           expect(page).to have_content("Forbidden access.")
@@ -112,11 +107,9 @@ RSpec.describe "Users", type: :system do
     describe 'マイページ' do
       context 'タスクを新規作成' do
         it '新規作成したタスクが表示される' do
-          user = create(:user)
-          login_user(user)
-          task = create(:task, user: user)
+          task = create(:task, title: "tasktest", user: user)
           visit user_path(user)
-          expect(page).to have_content("title_1")
+          expect(page).to have_content("tasktest")
         end
       end
     end
