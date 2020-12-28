@@ -65,47 +65,47 @@ RSpec.describe "Users", type: :system do
           expect(page).to have_content('User was successfully updated.')
         end
       end
-    end
 
-    context 'メールアドレスが未入力' do
-      it 'ユーザーの編集が失敗する' do
-        user = create(:user)
-        login_user(user)
-        visit edit_user_path(user)
-        fill_in 'Email', with: ''
-        fill_in 'Password', with: '12345678'
-        fill_in 'Password confirmation', with: '12345678'
-        click_button 'Update'
-        expect(current_path).to eq(user_path(user))
-        expect(page).to have_content("Email can't be blank")
-        expect(page).to have_content("1 error prohibited this user from being saved")
+      context 'メールアドレスが未入力' do
+        it 'ユーザーの編集が失敗する' do
+          user = create(:user)
+          login_user(user)
+          visit edit_user_path(user)
+          fill_in 'Email', with: ''
+          fill_in 'Password', with: '12345678'
+          fill_in 'Password confirmation', with: '12345678'
+          click_button 'Update'
+          expect(current_path).to eq(user_path(user))
+          expect(page).to have_content("Email can't be blank")
+          expect(page).to have_content("1 error prohibited this user from being saved")
+        end
       end
-    end
 
-    context '登録済みのメールアドレスを使用' do
-      it 'ユーザーの編集が失敗する' do
-        user = create(:user)
-        user2 = create(:user)
-        login_user(user)
-        visit edit_user_path(user)
-        fill_in 'Email', with: user2.email
-        fill_in 'Password', with: '12345678'
-        fill_in 'Password confirmation', with: '12345678'
-        click_button 'Update'
-        expect(current_path).to eq(user_path(user))
-        expect(page).to have_content("Email has already been taken")
-        expect(page).to have_content("1 error prohibited this user from being saved")
+      context '登録済みのメールアドレスを使用' do
+        it 'ユーザーの編集が失敗する' do
+          user = create(:user)
+          user2 = create(:user)
+          login_user(user)
+          visit edit_user_path(user)
+          fill_in 'Email', with: user2.email
+          fill_in 'Password', with: '12345678'
+          fill_in 'Password confirmation', with: '12345678'
+          click_button 'Update'
+          expect(current_path).to eq(user_path(user))
+          expect(page).to have_content("Email has already been taken")
+          expect(page).to have_content("1 error prohibited this user from being saved")
+        end
       end
-    end
 
-    context '他のユーザーの編集ページにアクセス' do
-      it '編集ページへのアクセスが失敗する' do
-        user = create(:user)
-        user2 = create(:user)
-        login_user(user)
-        visit edit_user_path(user2)
-        expect(current_path).to eq(user_path(user))
-        expect(page).to have_content("Forbidden access.")
+      context '他のユーザーの編集ページにアクセス' do
+        it '編集ページへのアクセスが失敗する' do
+          user = create(:user)
+          user2 = create(:user)
+          login_user(user)
+          visit edit_user_path(user2)
+          expect(current_path).to eq(user_path(user))
+          expect(page).to have_content("Forbidden access.")
+        end
       end
     end
   end
