@@ -63,34 +63,31 @@ RSpec.describe "Tasks", type: :system do
           expect(page).to have_content 'Deadline: 2020/12/30 4:37'
         end
       end
-    end
 
-    context 'タイトルが未入力' do
-      it 'タスクの作成が失敗' do
-        expect{
+      context 'タイトルが未入力' do
+        it 'タスクの作成が失敗' do
+          visit new_task_path
           fill_in 'Title', with: ''
           fill_in 'Content', with: 'コンテンツ'
-          select 'todo', from: 'Status'
-          fill_in 'Deadline',with: 1.week.from_now
-          click_on 'Create Task'
-        }.to change{Task.count}.by(0)
-        expect(current_path).to eq(tasks_path)
-        expect(page).to have_content("Title can't be blank")
+          click_button 'Create Task'
+          expect(page).to have_content '1 error prohibited this task from being saved:'
+          expect(page).to have_content "Title can't be blank"
+          expect(current_path).to eq tasks_path
+        end
       end
     end
 
-    # context '重複したタイトルの場合' do
-    #   it 'タスクの作成が失敗' do
-    #     expect{
-    #       fill_in 'Title', with: task.title
-    #       fill_in 'Content', with: 'コンテンツ'
-    #       select 'todo', from: 'Status'
-    #       fill_in 'Deadline',with: 1.week.from_now
-    #       click_on 'Create Task'
-    #     }.to change{Task.count}.by(0)
-    #     expect(current_path).to eq(tasks_path)
-    #     expect(page).to have_content("Title has already been taken")
-    #   end
-    # end
+    context '登録済のタイトルを入力' do
+      it 'タスクの新規作成が失敗する' do
+        visit new_task_path
+        other_task = create(:task)
+        fill_in 'Title', with: other_task.title
+        fill_in 'Content', with: 'test_content'
+        click_button 'Create Task'
+        expect(page).to have_content '1 error prohibited this task from being saved'
+        expect(page).to have_content 'Title has already been taken'
+        expect(current_path).to eq tasks_path
+      end
+    end
   end
 end
