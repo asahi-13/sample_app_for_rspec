@@ -31,7 +31,7 @@ RSpec.describe "Tasks", type: :system do
     end
 
     context 'タイトルが未入力' do
-      fit 'タスクの作成が失敗' do
+      it 'タスクの作成が失敗' do
         visit new_task_path
         expect{
           fill_in 'Title', with: ''
@@ -42,6 +42,22 @@ RSpec.describe "Tasks", type: :system do
         }.to change{Task.count}.by(0)
         expect(current_path).to eq(tasks_path)
         expect(page).to have_content("Title can't be blank")
+      end
+    end
+
+    context '重複したタイトルの場合' do
+      it 'タスクの作成が失敗' do
+        task = create(:task)
+        visit new_task_path
+        expect{
+          fill_in 'Title', with: task.title
+          fill_in 'Content', with: 'コンテンツ'
+          select 'todo', from: 'Status'
+          fill_in 'Deadline',with: 1.week.from_now
+          click_on 'Create Task'
+        }.to change{Task.count}.by(0)
+        expect(current_path).to eq(tasks_path)
+        expect(page).to have_content("Title has already been taken")
       end
     end
   end
