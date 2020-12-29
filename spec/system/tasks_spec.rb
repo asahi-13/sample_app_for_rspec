@@ -13,6 +13,14 @@ RSpec.describe "Tasks", type: :system do
           expect(current_path).to eq login_path
         end
       end
+
+      context 'タスクの編集ページにアクセス' do
+        it '編集ページへのアクセスが失敗する' do
+          visit edit_task_path(task)
+          expect(page).to have_content('Login required')
+          expect(current_path).to eq login_path
+        end
+      end
     end
   end
   describe 'ログイン後' do
