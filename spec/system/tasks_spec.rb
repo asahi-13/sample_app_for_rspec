@@ -21,8 +21,17 @@ RSpec.describe "Tasks", type: :system do
           expect(current_path).to eq login_path
         end
       end
+
+      context 'タスクの詳細ページにアクセス' do
+        it 'タスクの詳細情報が表示される' do
+          visit task_path(task)
+          expect(page).to have_content task.title
+          expect(current_path).to eq task_path(task)
+        end
+      end
     end
   end
+
   describe 'ログイン後' do
 
     before do
