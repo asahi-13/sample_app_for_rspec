@@ -13,11 +13,11 @@ RSpec.describe "Tasks", type: :system do
 
     before do
       login(user)
+      visit new_task_path
     end
 
     context 'フォームの入力値が正常' do
       it 'タスクの作成が成功' do
-        visit new_task_path
         expect{
           fill_in 'Title', with: 'タイトル'
           fill_in 'Content', with: 'コンテンツ'
@@ -32,7 +32,6 @@ RSpec.describe "Tasks", type: :system do
 
     context 'タイトルが未入力' do
       it 'タスクの作成が失敗' do
-        visit new_task_path
         expect{
           fill_in 'Title', with: ''
           fill_in 'Content', with: 'コンテンツ'
@@ -48,7 +47,6 @@ RSpec.describe "Tasks", type: :system do
     context '重複したタイトルの場合' do
       it 'タスクの作成が失敗' do
         task = create(:task)
-        visit new_task_path
         expect{
           fill_in 'Title', with: task.title
           fill_in 'Content', with: 'コンテンツ'
