@@ -12,7 +12,7 @@ RSpec.describe "Tasks", type: :system do
     let(:user){create(:user)}
 
     before do
-      login(user)
+      login_as(user)
       visit new_task_path
     end
 

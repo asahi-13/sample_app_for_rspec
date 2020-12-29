@@ -51,7 +51,7 @@ RSpec.describe "Users", type: :system do
 
   describe 'ログイン後' do
     before do
-      login(user)
+      login_as(user)
     end
 
     describe 'ユーザー編集' do
